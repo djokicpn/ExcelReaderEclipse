@@ -47,13 +47,13 @@ public class Compare {
 
         Map<String, Map<String, Double>> toRet = new HashMap<>();
 
-        for (Map.Entry<String, Map<String, Double>> entryForecast : forecast.mapaVelika.entrySet()) {
+        for (Map.Entry<String, Map<String, Double>> entryForecast : ReadFromForecast.mapaVelika.entrySet()) {
             Row newRoww = newSheet.createRow(rowCounter++);
             newRoww.createCell(0).setCellValue(entryForecast.getKey());
 
             Map<String, Double> productValueMapFromForecast = entryForecast.getValue();
             forecastUpc = entryForecast.getKey();
-            for (Map.Entry<String, Map<String, Double>> entryActual : actual.mapaVelika.entrySet()) {
+            for (Map.Entry<String, Map<String, Double>> entryActual : ReadFromActual.mapaVelika.entrySet()) {
 
                 String actualUpc = entryActual.getKey();
 

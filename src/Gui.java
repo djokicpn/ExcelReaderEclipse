@@ -15,8 +15,8 @@ import java.io.File;
  */
 public class Gui {
 
-    private String savedFilePath = "";
     private String filePath = "";
+    private String savedFilePath = "";
 
     public Gui() {
         Stage stage = new Stage();
@@ -54,11 +54,11 @@ public class Gui {
             FileChooser fc = new FileChooser();
             fc.setInitialFileName("*.xls");
             File file = fc.showSaveDialog(new Stage());
-            savedFilePath = file.getAbsolutePath();
             if (file != null) {
                 ReadFromActual readFromActual = new ReadFromActual(filePath);
                 ReadFromForecast readFromForecast = new ReadFromForecast(filePath, readFromActual.getHeaders(), readFromActual.getUpcs());
                 Compare.compare(readFromActual, readFromForecast, file.getAbsolutePath());
+                savedFilePath = file.getAbsolutePath();
                 showInfoAlert();
                 System.exit(0);
             }
@@ -79,7 +79,7 @@ public class Gui {
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setTitle("Error");
         alert.setHeaderText("Done !");
-        alert.setContentText("An error occurred, please contact support!");
+        alert.setContentText("Comparing values done ! File saved on: " + savedFilePath);
 
         alert.showAndWait();
     }

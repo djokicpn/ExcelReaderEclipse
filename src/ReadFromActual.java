@@ -26,23 +26,22 @@ public class ReadFromActual {
             Workbook wb = null;
             wb = WorkbookFactory.create(fileInput);
             Sheet s = wb.getSheet("ACTUAL");
-            rowCount = s.getLastRowNum();
-            Iterator<Row> rows = s.rowIterator();
 
+            Iterator<Row> rows = s.rowIterator();
             while (rows.hasNext()) {
                 Row row = rows.next();
                 if (firstRow) {
                     for (int i = 0; i < headers.length; i++) {
-                        headers[i] = row.getCell(i + 1).getStringCellValue().substring(5, row.getCell(i + 1).getStringCellValue().length());
+                        headers[i] = row.getCell(i + 3).getStringCellValue().substring(5, row.getCell(i + 3).getStringCellValue().length());
                     }
                 }
                 if (!firstRow && row.getCell(0).toString().length() > 1) {
                     Map<String, Double> mapa = new HashMap<>();
-                    String upc = row.getCell(0).toString() + "";
+                    String upc = (long) row.getCell(0).getNumericCellValue() + "";
                     upcs.add(upc);
                     Product p = new Product();
                     for (int i = 0; i < headers.length; i++) {
-                        Double value = row.getCell(i + 1).getNumericCellValue();
+                        Double value = row.getCell(i + 3).getNumericCellValue();
                         mapa.put(headers[i], value);
                     }
                     mapaVelika.put(upc, mapa);
