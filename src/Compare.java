@@ -12,7 +12,7 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.TreeMap;
 import java.util.List;
 import java.util.Map;
 
@@ -20,7 +20,7 @@ import java.util.Map;
  * Created by Aleksandar Djokic on 12/31/2015.
  */
 public class Compare {
-	public static List<Product> lista = new ArrayList<>();
+//	public static List<Product> lista = new ArrayList<>();
 
 	public Compare() {
 //		
@@ -43,7 +43,7 @@ public class Compare {
         Row weekHeading = newSheet.createRow(0);
         Row heading = newSheet.createRow(1);
 
-        Map<String, Map<String, Double>> toRet = new HashMap<>();
+        Map<String, Map<String, Double>> toRet = new TreeMap<>();
 
         for (Map.Entry<String, Map<String, Double>> entryForecast : ReadFromForecast.mapaVelika.entrySet()) {
             Row newRoww = newSheet.createRow(rowCounter++);
@@ -60,13 +60,15 @@ public class Compare {
                     for (Map.Entry<String, Double> entryForecast1 : productValueMapFromForecast.entrySet()) {
                         for (Map.Entry<String, Double> entryActual1 : productValueMapFromActual.entrySet()) {
                             if (entryForecast.getKey().equals(entryActual.getKey()) && entryForecast1.getKey().equals(entryActual1.getKey())) {
-                            	Product p = new Product();
 
                             	week = entryForecast1.getKey();
                                 difference = entryForecast1.getValue() - entryActual1.getValue();
+
+//                                Product p = new Product();
+//                                p.setMapaVelika(toRet);
+//                                lista.add(p);
+
                                 System.out.println(" UPC : " + forecastUpc + "  " + week + "  " + entryForecast1.getValue() + " - " + "  " + entryActual1.getValue() + " = " + difference );
-                                p.setMapaVelika(toRet);
-                                lista.add(p);
 
                                 heading.createCell(0).setCellValue("UPC");
                                 newSheet.autoSizeColumn(0);
@@ -118,15 +120,12 @@ public class Compare {
                                 newSheet.autoSizeColumn(counterForHeading - 1);
 
                                 difference = 0.0;
-
                             }
                         }
                     }
                     counterForHeading = 1;
                     valuesCounter = 1;
                 }
-
-
             }
         }
         rowCounter = 0;

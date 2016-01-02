@@ -14,7 +14,7 @@ public class ReadFromActual {
 
     boolean firstRow = true;
     
-    List<Product> listOfProducts = new ArrayList<Product>();
+//    List<Product> listOfProducts = new ArrayList<Product>();
     String[] headers = new String[13];
     
     //Lista UPC-a koja je potrebna zbog provere sa Forecast tabom, kako bi se izbeglo uporedjivanje n elementa.
@@ -22,7 +22,7 @@ public class ReadFromActual {
     
     //kljuc ove mape je zapravo Universal Product Code (UPC) 
     //vrednost je nova mapa koja za kljc ima redni broj nedelje a za value ima vrednost product-a za datu nedelju
-    public static Map<String, Map<String, Double>> mapaVelika = new HashMap<>();
+    public static Map<String, Map<String, Double>> mapaVelika = new TreeMap<>();
 
     public ReadFromActual(String path) {
         try {
@@ -43,17 +43,17 @@ public class ReadFromActual {
                     }
                 }
                 if (!firstRow && row.getCell(0).toString().length() > 1) {
-                    Map<String, Double> mapa = new HashMap<>();
+                    Map<String, Double> mapa = new TreeMap<>();
                     String upc = (long) row.getCell(0).getNumericCellValue() + "";
                     upcs.add(upc);
-                    Product p = new Product();
+//                    Product p = new Product();
                     for (int i = 0; i < headers.length; i++) {
                         Double value = row.getCell(i + 3).getNumericCellValue();
                         mapa.put(headers[i], value);
                     }
                     mapaVelika.put(upc, mapa);
-                    p.setMapaVelika(mapaVelika);
-                    listOfProducts.add(p);
+//                    p.setMapaVelika(mapaVelika);
+//                    listOfProducts.add(p);
                 }
                 firstRow = false;
                 if (row.getCell(0).getCellType() > 2)
@@ -96,14 +96,14 @@ public class ReadFromActual {
     public void setUpcs(List<String> upcs) {
         this.upcs = upcs;
     }
-
-    public List<Product> getListOfProducts() {
-        return listOfProducts;
-    }
-
-    public void setListOfProducts(List<Product> listOfProducts) {
-        this.listOfProducts = listOfProducts;
-    }
+//
+//    public List<Product> getListOfProducts() {
+//        return listOfProducts;
+//    }
+//
+//    public void setListOfProducts(List<Product> listOfProducts) {
+//        this.listOfProducts = listOfProducts;
+//    }
 
     public String[] getHeaders() {
         return headers;

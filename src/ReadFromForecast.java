@@ -14,9 +14,9 @@ public class ReadFromForecast {
     int brojac = 0;
     int rowCount = 0;
     boolean firstRow = true;
-    List<Product> listOfProducts = new ArrayList<Product>();
+//    List<Product> listOfProducts = new ArrayList<Product>();
 
-    public static Map<String, Map<String, Double>> mapaVelika = new HashMap<>();
+    public static Map<String, Map<String, Double>> mapaVelika = new TreeMap<>();
 
     public ReadFromForecast(String path, String[] headersFromActual, List<String> upcs) {
         String[] headers = new String[52];
@@ -37,7 +37,7 @@ public class ReadFromForecast {
                     }
                 }
                 if (!firstRow && row.getCell(10).toString().length() > 1) {
-                    Map<String, Double> mapa = new HashMap<>();
+                    Map<String, Double> mapa = new TreeMap<>();
 
                     String upc = (long) row.getCell(9).getNumericCellValue() + "";
                     for(int b = 0; b<upcs.size();b++){
@@ -59,7 +59,7 @@ public class ReadFromForecast {
                             }
                             mapaVelika.put(upc, mapa);
                             p.setMapaVelika(mapaVelika);
-                            listOfProducts.add(p);
+//                            listOfProducts.add(p);
                         }
                     }
 
