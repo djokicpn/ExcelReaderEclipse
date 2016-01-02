@@ -32,7 +32,6 @@ public class ReadFromForecast {
                 Row row = rows.next();
                 if (firstRow) {
                     for (int i = 0; i < headers.length; i++) {
-//                        System.out.println(row.getCell(i + 11).toString() + " " + (i));
                         String toHeader = row.getCell(i + 11).getNumericCellValue() + "";
                         headers[i] = toHeader.substring(0, toHeader.length() - 2);
                     }
@@ -67,8 +66,6 @@ public class ReadFromForecast {
 
                 }
                 firstRow = false;
-//                if (row.getCell(0).getCellType() > 2)
-//                    break;
             }
 
         } catch (FileNotFoundException e) {
@@ -86,42 +83,3 @@ public class ReadFromForecast {
 //        System.out.println("Week's numbers: " + Arrays.toString(headers));
     }
 }
-/*
-   try{
-//                        switch (row.getCell(i).getCellType()) {
-//                            case Cell.CELL_TYPE_STRING:
-//                                System.out.println();
-//
-//                                break;
-//                            case Cell.CELL_TYPE_NUMERIC:
-//                                System.out.println(headers[i] = row.getCell(i + 11).getNumericCellValue() + "");
-//                                break;
-//                        }}catch (IllegalStateException e) {
-//                            e.printStackTrace();
-* while (cells.hasNext()) {
-                    counter1++;
-                    Cell cell = cells.next();
-
-                    switch (cell.getCellType()) {
-
-                        case Cell.CELL_TYPE_NUMERIC:
-                            listOfProducts.forEach(product -> {
-                            });
-                            System.out.println(counter + "  " + counter1 + "  " + cell.getNumericCellValue());
-                            break;
-
-                        case Cell.CELL_TYPE_STRING:
-
-                            if(counter1==1 && !cell.getStringCellValue().equals("UPC")) {
-                                Product p = new Product();
-                                p.setUpc(cell.getStringCellValue());
-                                listOfProducts.add(p);
-                            }
-                            System.out.println(counter + "  " + counter1 + "  " + cell.getStringCellValue());
-                            break;
-
-                        default:
-                            break;
-                    }
-                }
-                */

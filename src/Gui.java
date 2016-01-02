@@ -65,7 +65,7 @@ public class Gui {
 
 
         });
-
+        
         stage.setScene(new Scene(gp, 200, 50));
         stage.setResizable(false);
         stage.setTitle("CTG");
@@ -77,10 +77,9 @@ public class Gui {
 
     private void showInfoAlert() {
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
-        alert.setTitle("Error");
+        alert.setTitle("Done");
         alert.setHeaderText("Done !");
         alert.setContentText("Comparing values done ! File saved on: " + savedFilePath);
-
         alert.showAndWait();
     }
 }

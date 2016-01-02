@@ -20,18 +20,16 @@ import java.util.Map;
  * Created by Aleksandar Djokic on 12/31/2015.
  */
 public class Compare {
-    public static List<Product> lista = new ArrayList<>();
+	public static List<Product> lista = new ArrayList<>();
 
-    public Compare() {
+	public Compare() {
+//		
+//		lista.forEach(p->{
+//			 System.out.println(p.toString());
+//		});
+	}
 
-//        compare(readFromActual, readFromForecast);
-//        for (Product p : lista) {
-//            System.out.println(p.toString());
-//            break;
-//        }
-    }
-
-    public static Map<String, Map<String, Double>> compare(ReadFromActual actual, ReadFromForecast forecast,String path) {
+	public static Map<String, Map<String, Double>> compare(ReadFromActual actual, ReadFromForecast forecast,String path) {
         int counterForHeading = 1;
         int rowCounter = 2;
         int valuesCounter = 1;
@@ -59,17 +57,14 @@ public class Compare {
 
                 if (forecastUpc.equals(actualUpc)) {
                     Map<String, Double> productValueMapFromActual = entryActual.getValue();
-                    Map<String, Double> mapToBeChanged = new HashMap<>();
                     for (Map.Entry<String, Double> entryForecast1 : productValueMapFromForecast.entrySet()) {
                         for (Map.Entry<String, Double> entryActual1 : productValueMapFromActual.entrySet()) {
                             if (entryForecast.getKey().equals(entryActual.getKey()) && entryForecast1.getKey().equals(entryActual1.getKey())) {
+                            	Product p = new Product();
 
-                                week = entryForecast1.getKey();
-                                Product p = new Product();
-//                                System.out.println(" UPC : " + forecastUpc + "  " + week + "  " + difference + " = " + entryForecast1.getValue() + " - " + "  " + entryActual1.getValue());
+                            	week = entryForecast1.getKey();
                                 difference = entryForecast1.getValue() - entryActual1.getValue();
-                                mapToBeChanged.put(week, Math.floor(difference));
-                                toRet.put(forecastUpc, mapToBeChanged);
+                                System.out.println(" UPC : " + forecastUpc + "  " + week + "  " + entryForecast1.getValue() + " - " + "  " + entryActual1.getValue() + " = " + difference );
                                 p.setMapaVelika(toRet);
                                 lista.add(p);
 
@@ -82,7 +77,7 @@ public class Compare {
                                 newRoww.getCell(valuesCounter - 1).setCellStyle(style1);
                                 newRoww.createCell(valuesCounter++).setCellValue((Math.floor(entryForecast1.getValue())));
 
-                                if (difference < 0.0) {
+                                if (difference < 0) {
                                     CellStyle style = workbook.createCellStyle();
                                     Font font = workbook.createFont();
                                     font.setColor(HSSFColor.RED.index);
@@ -101,20 +96,24 @@ public class Compare {
                                     newRoww.getCell(valuesCounter - 1).setCellStyle(style);
 
                                 }
-                                weekHeading.createCell(counterForHeading).setCellValue("WEEK " + week);
-                                newSheet.addMergedRegion(new CellRangeAddress(0, 0, counterForHeading, counterForHeading + 2));
-
                                 CellStyle style = workbook.createCellStyle();
                                 style.setBorderLeft(CellStyle.BORDER_THIN);
                                 style.setAlignment(CellStyle.ALIGN_CENTER);
                                 style.setVerticalAlignment(CellStyle.ALIGN_CENTER);
+
+                                weekHeading.createCell(counterForHeading).setCellValue("WEEK " + week);
                                 weekHeading.getCell(counterForHeading).setCellStyle(style);
+                                
+                                newSheet.addMergedRegion(new CellRangeAddress(0, 0, counterForHeading, counterForHeading + 2));
+
 
                                 heading.createCell(counterForHeading++).setCellValue("ACTUAL");
                                 newSheet.autoSizeColumn(counterForHeading - 1);
                                 heading.getCell(counterForHeading - 1).setCellStyle(style);
+                                
                                 heading.createCell(counterForHeading++).setCellValue("FORECAST");
                                 newSheet.autoSizeColumn(counterForHeading - 1);
+                                
                                 heading.createCell(counterForHeading++).setCellValue("DIFFERENCE");
                                 newSheet.autoSizeColumn(counterForHeading - 1);
 
@@ -131,6 +130,7 @@ public class Compare {
             }
         }
         rowCounter = 0;
+        
         try {
             FileOutputStream out = new FileOutputStream(new File(path));
             try {

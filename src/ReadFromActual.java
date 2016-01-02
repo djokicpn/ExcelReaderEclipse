@@ -12,12 +12,16 @@ import org.apache.poi.ss.usermodel.*;
 
 public class ReadFromActual {
 
-    int brojac = 0;
-    int rowCount = 0;
     boolean firstRow = true;
+    
     List<Product> listOfProducts = new ArrayList<Product>();
     String[] headers = new String[13];
+    
+    //Lista UPC-a koja je potrebna zbog provere sa Forecast tabom, kako bi se izbeglo uporedjivanje n elementa.
     List<String> upcs = new ArrayList<>();
+    
+    //kljuc ove mape je zapravo Universal Product Code (UPC) 
+    //vrednost je nova mapa koja za kljc ima redni broj nedelje a za value ima vrednost product-a za datu nedelju
     public static Map<String, Map<String, Double>> mapaVelika = new HashMap<>();
 
     public ReadFromActual(String path) {
@@ -30,8 +34,11 @@ public class ReadFromActual {
             Iterator<Row> rows = s.rowIterator();
             while (rows.hasNext()) {
                 Row row = rows.next();
+                
+                //Proveravam da li je prvi red, ako jeste onda to koristim kao headere, tj kao redne brojeve nedelja.
                 if (firstRow) {
                     for (int i = 0; i < headers.length; i++) {
+                    	//nedelje pocinju od cetvrte kolone
                         headers[i] = row.getCell(i + 3).getStringCellValue().substring(5, row.getCell(i + 3).getStringCellValue().length());
                     }
                 }
@@ -73,21 +80,6 @@ public class ReadFromActual {
         return mapaVelika;
     }
 
-    public int getBrojac() {
-        return brojac;
-    }
-
-    public void setBrojac(int brojac) {
-        this.brojac = brojac;
-    }
-
-    public int getRowCount() {
-        return rowCount;
-    }
-
-    public void setRowCount(int rowCount) {
-        this.rowCount = rowCount;
-    }
 
     public boolean isFirstRow() {
         return firstRow;
@@ -129,33 +121,3 @@ public class ReadFromActual {
         ReadFromActual.mapaVelika = mapaVelika;
     }
 }
-
-
-/*
-* while (cells.hasNext()) {
-                    counter1++;
-                    Cell cell = cells.next();
-
-                    switch (cell.getCellType()) {
-
-                        case Cell.CELL_TYPE_NUMERIC:
-                            listOfProducts.forEach(product -> {
-                            });
-                            System.out.println(counter + "  " + counter1 + "  " + cell.getNumericCellValue());
-                            break;
-
-                        case Cell.CELL_TYPE_STRING:
-
-                            if(counter1==1 && !cell.getStringCellValue().equals("UPC")) {
-                                Product p = new Product();
-                                p.setUpc(cell.getStringCellValue());
-                                listOfProducts.add(p);
-                            }
-                            System.out.println(counter + "  " + counter1 + "  " + cell.getStringCellValue());
-                            break;
-
-                        default:
-                            break;
-                    }
-                }
-                */
