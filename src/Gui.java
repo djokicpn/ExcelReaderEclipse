@@ -60,10 +60,11 @@ public class Gui {
 				ReadFromActual readFromActual = new ReadFromActual(filePath);
 				ReadFromForecast readFromForecast = new ReadFromForecast(filePath, readFromActual.getHeaders(),
 						readFromActual.getUpcs());
-				Compare.compare(readFromActual, readFromForecast, file.getAbsolutePath());
+				
+				Compare a = new Compare(readFromActual, readFromForecast, file.getAbsolutePath());
 				savedFilePath = file.getAbsolutePath();
 				showInfoAlert();
-				System.exit(0);
+//				System.exit(0);
 				} catch(Exception exception) {
 					exception.printStackTrace();
 					showErrorAlert();
