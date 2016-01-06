@@ -61,7 +61,7 @@ public class Gui {
 				ReadFromForecast readFromForecast = new ReadFromForecast(filePath, readFromActual.getHeaders(),
 						readFromActual.getUpcs());
 				
-				Compare a = new Compare(readFromActual, readFromForecast, file.getAbsolutePath());
+				new Compare(readFromActual, readFromForecast, file.getAbsolutePath());
 				savedFilePath = file.getAbsolutePath();
 				showInfoAlert();
 //				System.exit(0);

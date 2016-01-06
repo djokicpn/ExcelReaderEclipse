@@ -44,6 +44,8 @@ public class ReadFromActual {
                 }
                 if (!firstRow && row.getCell(0).toString().length() > 1) {
                     Map<String, Double> mapa = new TreeMap<>();
+                    String productName = row.getCell(2).getStringCellValue();
+                    System.out.println(productName);
                     String upc = (long) row.getCell(0).getNumericCellValue() + "";
                     upcs.add(upc);
 //                    Product p = new Product();
