@@ -17,9 +17,9 @@ public class Gui {
 
 	private String filePath = "";
 	private String savedFilePath = "";
+	private Stage stage = new Stage();
 
 	public Gui() {
-		Stage stage = new Stage();
 
 		GridPane gp = new GridPane();
 		FlowPane fp = new FlowPane();
@@ -71,7 +71,7 @@ public class Gui {
 				}
 				
 			}
-
+			stage.hide();
 		});
 
 		stage.setScene(new Scene(gp, 200, 50));

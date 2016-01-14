@@ -7,25 +7,47 @@ import org.apache.poi.ss.usermodel.Font;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.util.CellRangeAddress;
 
+import com.sun.javafx.charts.Legend;
+
+import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.TreeMap;
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
+import javafx.event.EventHandler;
 import javafx.geometry.Pos;
+import javafx.scene.Node;
 import javafx.scene.Scene;
+import javafx.scene.SnapshotParameters;
 import javafx.scene.chart.BarChart;
 import javafx.scene.chart.CategoryAxis;
 import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.XYChart;
+import javafx.scene.chart.XYChart.Data;
+import javafx.scene.control.Alert;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
+import javafx.scene.image.Image;
+import javafx.scene.image.PixelWriter;
+import javafx.scene.image.WritableImage;
+import javafx.scene.input.Clipboard;
+import javafx.scene.input.ClipboardContent;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.FlowPane;
+import javafx.scene.layout.GridPane;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
+import jdk.nashorn.internal.objects.Global;
 
 /**
  * Created by Aleksandar Djokic on 12/31/2015.
@@ -39,10 +61,10 @@ public class Compare {
 	//// System.out.println(p.toString());
 	//// });
 	// }
-
+	BufferedImage bufferedImage = new BufferedImage(550, 400, BufferedImage.TYPE_INT_ARGB);
+	Label copyLabel = new Label("");
 	@SuppressWarnings("unchecked")
 	public Compare(ReadFromActual actual, ReadFromForecast forecast, String path) {
-
 		Set<String> stringsForCbox = new HashSet<>();
 		Stage stage = new Stage();
 		stage.setTitle("Bar Chart");
@@ -51,13 +73,19 @@ public class Compare {
 		ComboBox<String> cBox = new ComboBox<>();
 		cBox.setValue("Select UPC...	");
 		
+		
+		GridPane gridForTop = new GridPane();
+		gridForTop.setAlignment(Pos.CENTER);
+		gridForTop.add(cBox, 0, 1);
+		gridForTop.add(copyLabel, 0, 2);
+		
 		Label l = new Label("You have to select article to view Bar Chart");
 		bp.setAlignment(l, Pos.CENTER);
 		bp.setCenter(l);
-		
-		int counterForHeading = 1;
+
+		int counterForHeading = 2;
 		int rowCounter = 2;
-		int valuesCounter = 1;
+		int valuesCounter = 2;
 		double difference = 0.0;
 		String forecastUpc = "";
 		String week = "";
@@ -73,20 +101,21 @@ public class Compare {
 		for (Map.Entry<String, Map<String, Double>> entryForecast : ReadFromForecast.mapaVelika.entrySet()) {
 			Row newRoww = newSheet.createRow(rowCounter++);
 			newRoww.createCell(0).setCellValue(entryForecast.getKey());
+			newRoww.createCell(1)
+					.setCellValue(GlobalVariables.mapOfProducts.get(Long.parseLong(entryForecast.getKey())));
+			newSheet.autoSizeColumn(1);
 
 			Map<String, Double> productValueMapFromForecast = entryForecast.getValue();
 			forecastUpc = entryForecast.getKey();
 			for (Map.Entry<String, Map<String, Double>> entryActual : ReadFromActual.mapaVelika.entrySet()) {
 				String actualUpc = entryActual.getKey();
-				stringsForCbox.add(actualUpc);
-
+				stringsForCbox.add(GlobalVariables.mapOfProducts.get(Long.parseLong(actualUpc)));
 				if (forecastUpc.equals(actualUpc)) {
 					Map<String, Double> productValueMapFromActual = entryActual.getValue();
 					for (Map.Entry<String, Double> entryForecast1 : productValueMapFromForecast.entrySet()) {
 						for (Map.Entry<String, Double> entryActual1 : productValueMapFromActual.entrySet()) {
 							if (entryForecast.getKey().equals(entryActual.getKey())
 									&& entryForecast1.getKey().equals(entryActual1.getKey())) {
-
 								week = entryForecast1.getKey();
 								difference = entryForecast1.getValue() - entryActual1.getValue();
 
@@ -94,24 +123,20 @@ public class Compare {
 								// p.setMapaVelika(toRet);
 								// lista.add(p);
 
-								System.out.println(
-										" UPC : " + forecastUpc + "  " + week + "  " + entryForecast1.getValue() + " - "
-												+ "  " + entryActual1.getValue() + " = " + difference);
+								// System.out.println(
+								// " UPC : " + forecastUpc + " " + week + " " +
+								// entryForecast1.getValue() + " - "
+								// + " " + entryActual1.getValue() + " = " +
+								// difference);
 
 								heading.createCell(0).setCellValue("UPC");
+								heading.createCell(1).setCellValue("PRODUCT NAME");
+
 								newSheet.autoSizeColumn(0);
 
 								CellStyle style1 = workbook.createCellStyle();
 								style1.setBorderLeft(HSSFCellStyle.BORDER_THIN);
 
-								// if (actualUpc.equals("6005000817478")) {
-								// actualChart.getData().add(
-								// new XYChart.Data(actualUpc + week,
-								// Math.floor(entryActual1.getValue())));
-								// forecastChart.getData().add(
-								// new XYChart.Data(actualUpc + week,
-								// Math.floor(entryForecast1.getValue())));
-								// }
 								newRoww.createCell(valuesCounter++).setCellValue(Math.floor(entryActual1.getValue()));
 								newRoww.getCell(valuesCounter - 1).setCellStyle(style1);
 								newRoww.createCell(valuesCounter++)
@@ -161,8 +186,8 @@ public class Compare {
 							}
 						}
 					}
-					counterForHeading = 1;
-					valuesCounter = 1;
+					counterForHeading = 2;
+					valuesCounter = 2;
 				}
 			}
 		}
@@ -181,14 +206,20 @@ public class Compare {
 			}
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
+			Alert alert = new Alert(Alert.AlertType.ERROR);
+			alert.setTitle("ERROR!");
+			alert.setHeaderText("Problem with writing file!");
+			alert.setContentText("Your file might be oppened by another source!");
+			alert.showAndWait();
 		}
 
 		cBox.setOnAction(e -> {
+
 			final CategoryAxis xAxis = new CategoryAxis();
 			final NumberAxis yAxis = new NumberAxis();
 			final BarChart<String, Number> bc = new BarChart<String, Number>(xAxis, yAxis);
 
-			bc.setTitle("Actual vs Forecast difference chart");
+			bc.setTitle("");
 			xAxis.setLabel("Week");
 			yAxis.setLabel("Value");
 
@@ -206,20 +237,44 @@ public class Compare {
 				forecastUpc1 = entryForecast.getKey();
 				for (Map.Entry<String, Map<String, Double>> entryActual : ReadFromActual.mapaVelika.entrySet()) {
 					String actualUpc = entryActual.getKey();
-					stringsForCbox.add(actualUpc);
+
 					if (forecastUpc1.equals(actualUpc)) {
 						Map<String, Double> productValueMapFromActual = entryActual.getValue();
 						for (Map.Entry<String, Double> entryForecast1 : productValueMapFromForecast.entrySet()) {
 							for (Map.Entry<String, Double> entryActual1 : productValueMapFromActual.entrySet()) {
+
 								if (entryForecast.getKey().equals(entryActual.getKey())
 										&& entryForecast1.getKey().equals(entryActual1.getKey())) {
 
 									week1 = entryForecast1.getKey();
-									if (actualUpc.equals(cBox.getSelectionModel().getSelectedItem().toString())) {
-										actualChart.getData()
-												.add(new XYChart.Data(week1, Math.floor(entryActual1.getValue())));
-										forecastChart.getData()
-												.add(new XYChart.Data(week1, Math.floor(entryForecast1.getValue())));
+									if (GlobalVariables.mapOfProducts.get(Long.parseLong(actualUpc))
+											.equals(cBox.getSelectionModel().getSelectedItem().toString())) {
+
+										bc.setTitle(cBox.getSelectionModel().getSelectedItem().toString());
+										
+										Data data = new XYChart.Data(week1, Math.floor(entryActual1.getValue()));
+										Data data1 = new XYChart.Data(week1, Math.floor(entryForecast1.getValue()));
+
+										data.nodeProperty().addListener(new ChangeListener<Node>() {
+											@Override
+											public void changed(ObservableValue<? extends Node> ov, Node oldNode,
+													Node newNode) {
+												if (newNode != null) {
+													newNode.setStyle("-fx-bar-fill: #45803c;");
+												}
+											}
+										});
+										data1.nodeProperty().addListener(new ChangeListener<Node>() {
+											@Override
+											public void changed(ObservableValue<? extends Node> ov, Node oldNode,
+													Node newNode) {
+												if (newNode != null) {
+													newNode.setStyle("-fx-bar-fill:  #8eb16c;");
+												}
+											}
+										});
+										actualChart.getData().add(data);
+										forecastChart.getData().add(data1);
 									}
 								}
 							}
@@ -227,16 +282,32 @@ public class Compare {
 					}
 				}
 			}
-			cBox.getItems().addAll(stringsForCbox);
 			bc.getData().addAll(actualChart, forecastChart);
 			bp.setCenter(bc);
+
+			bp.setOnMouseClicked(new EventHandler<MouseEvent>() {
+
+				@Override
+				public void handle(MouseEvent event) {
+					WritableImage snapshot = bp.getCenter().snapshot(new SnapshotParameters(), null);
+					Clipboard clipboard = Clipboard.getSystemClipboard();
+					ClipboardContent content = new ClipboardContent();
+
+					content.putImage(snapshot);
+					clipboard.setContent(content);
+					
+					copyLabel.setText((cBox.getSelectionModel().getSelectedItem().toString()) + " chart copied to clipboard!");
+					
+
+				}
+			});
+
 		});
 
-		bp.setAlignment(cBox, Pos.CENTER);
-		bp.setTop(cBox);
+		BorderPane.setAlignment(gridForTop, Pos.CENTER);
+		bp.setTop(gridForTop);
 
 		Scene scene = new Scene(bp, 800, 600);
-
 		stage.setScene(scene);
 		stage.show();
 
