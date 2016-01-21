@@ -1,13 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
 	<classpathentry kind="src" path="src"/>
-	<classpathentry kind="lib" path="C:/Users/Aleksnadar/Documents/Libs/xmlbeans.jar"/>
-	<classpathentry kind="lib" path="C:/Users/Aleksnadar/Documents/Libs/poi-3.13/poi-3.13-20150929.jar"/>
-	<classpathentry kind="lib" path="C:/Users/Aleksnadar/Documents/Libs/poi-3.13/poi-examples-3.13-20150929.jar"/>
-	<classpathentry kind="lib" path="C:/Users/Aleksnadar/Documents/Libs/poi-3.13/poi-excelant-3.13-20150929.jar"/>
-	<classpathentry kind="lib" path="C:/Users/Aleksnadar/Documents/Libs/poi-3.13/poi-ooxml-3.13-20150929.jar"/>
-	<classpathentry kind="lib" path="C:/Users/Aleksnadar/Documents/Libs/poi-3.13/poi-ooxml-schemas-3.13-20150929.jar"/>
-	<classpathentry kind="lib" path="C:/Users/Aleksnadar/Documents/Libs/poi-3.13/poi-scratchpad-3.13-20150929.jar"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="lib" path="C:/Users/stefa/git/poi-3.13-20150929.jar"/>
+	<classpathentry kind="lib" path="C:/Users/stefa/git/poi-examples-3.13-20150929.jar"/>
+	<classpathentry kind="lib" path="C:/Users/stefa/git/poi-excelant-3.13-20150929.jar"/>
+	<classpathentry kind="lib" path="C:/Users/stefa/git/poi-ooxml-3.13-20150929.jar"/>
+	<classpathentry kind="lib" path="C:/Users/stefa/git/poi-ooxml-schemas-3.13-20150929.jar"/>
+	<classpathentry kind="lib" path="C:/Users/stefa/git/poi-scratchpad-3.13-20150929.jar"/>
+	<classpathentry kind="lib" path="C:/Users/stefa/git/xmlbeans.jar"/>
+	<classpathentry kind="lib" path="C:/Users/stefa/Downloads/ScenicView.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

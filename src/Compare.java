@@ -6,6 +6,7 @@ import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.ss.usermodel.Font;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.util.CellRangeAddress;
+import org.scenicview.ScenicView;
 
 import com.sun.javafx.charts.Legend;
 
@@ -63,6 +64,7 @@ public class Compare {
 	// }
 	BufferedImage bufferedImage = new BufferedImage(550, 400, BufferedImage.TYPE_INT_ARGB);
 	Label copyLabel = new Label("");
+
 	@SuppressWarnings("unchecked")
 	public Compare(ReadFromActual actual, ReadFromForecast forecast, String path) {
 		Set<String> stringsForCbox = new HashSet<>();
@@ -72,13 +74,12 @@ public class Compare {
 		BorderPane bp = new BorderPane();
 		ComboBox<String> cBox = new ComboBox<>();
 		cBox.setValue("Select UPC...	");
-		
-		
+
 		GridPane gridForTop = new GridPane();
 		gridForTop.setAlignment(Pos.CENTER);
 		gridForTop.add(cBox, 0, 1);
 		gridForTop.add(copyLabel, 0, 2);
-		
+
 		Label l = new Label("You have to select article to view Bar Chart");
 		bp.setAlignment(l, Pos.CENTER);
 		bp.setCenter(l);
@@ -217,11 +218,11 @@ public class Compare {
 
 			final CategoryAxis xAxis = new CategoryAxis();
 			final NumberAxis yAxis = new NumberAxis();
-			final BarChart<String, Number> bc = new BarChart<String, Number>(xAxis, yAxis);
+			BarChart bc = new BarChart(xAxis, yAxis);
 
 			bc.setTitle("");
 			xAxis.setLabel("Week");
-			yAxis.setLabel("Value");
+			yAxis.setLabel("Sell Units");
 
 			XYChart.Series actualChart = new XYChart.Series();
 			actualChart.setName("Actual");
@@ -230,7 +231,6 @@ public class Compare {
 			forecastChart.setName("Forecast");
 			String forecastUpc1 = "";
 			String week1 = "";
-			Map<String, Map<String, Double>> toRet1 = new TreeMap<>();
 
 			for (Map.Entry<String, Map<String, Double>> entryForecast : ReadFromForecast.mapaVelika.entrySet()) {
 				Map<String, Double> productValueMapFromForecast = entryForecast.getValue();
@@ -251,28 +251,12 @@ public class Compare {
 											.equals(cBox.getSelectionModel().getSelectedItem().toString())) {
 
 										bc.setTitle(cBox.getSelectionModel().getSelectedItem().toString());
-										
-										Data data = new XYChart.Data(week1, Math.floor(entryActual1.getValue()));
-										Data data1 = new XYChart.Data(week1, Math.floor(entryForecast1.getValue()));
 
-										data.nodeProperty().addListener(new ChangeListener<Node>() {
-											@Override
-											public void changed(ObservableValue<? extends Node> ov, Node oldNode,
-													Node newNode) {
-												if (newNode != null) {
-													newNode.setStyle("-fx-bar-fill: #45803c;");
-												}
-											}
-										});
-										data1.nodeProperty().addListener(new ChangeListener<Node>() {
-											@Override
-											public void changed(ObservableValue<? extends Node> ov, Node oldNode,
-													Node newNode) {
-												if (newNode != null) {
-													newNode.setStyle("-fx-bar-fill:  #8eb16c;");
-												}
-											}
-										});
+										Data<String, Double> data = new XYChart.Data<String, Double>(week1,
+												Math.floor(entryActual1.getValue()));
+										Data<String, Double> data1 = new XYChart.Data<String, Double>(week1,
+												Math.floor(entryForecast1.getValue()));
+
 										actualChart.getData().add(data);
 										forecastChart.getData().add(data1);
 									}
@@ -284,20 +268,16 @@ public class Compare {
 			}
 			bc.getData().addAll(actualChart, forecastChart);
 			bp.setCenter(bc);
-
 			bp.setOnMouseClicked(new EventHandler<MouseEvent>() {
-
 				@Override
 				public void handle(MouseEvent event) {
 					WritableImage snapshot = bp.getCenter().snapshot(new SnapshotParameters(), null);
 					Clipboard clipboard = Clipboard.getSystemClipboard();
 					ClipboardContent content = new ClipboardContent();
-
 					content.putImage(snapshot);
 					clipboard.setContent(content);
-					
-					copyLabel.setText((cBox.getSelectionModel().getSelectedItem().toString()) + " chart copied to clipboard!");
-					
+					copyLabel.setText(
+							(cBox.getSelectionModel().getSelectedItem().toString()) + " chart copied to clipboard!");
 
 				}
 			});
@@ -309,6 +289,8 @@ public class Compare {
 
 		Scene scene = new Scene(bp, 800, 600);
 		stage.setScene(scene);
+		ScenicView.show(stage.getScene());
+		stage.getScene().getStylesheets().add("style.css");
 		stage.show();
 
 	}
