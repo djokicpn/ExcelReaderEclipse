@@ -8,6 +8,7 @@ import javafx.scene.layout.GridPane;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
+import java.awt.Desktop;
 import java.io.File;
 
 /**
@@ -63,6 +64,7 @@ public class Gui {
 				
 				new Compare(readFromActual, readFromForecast, file.getAbsolutePath());
 				savedFilePath = file.getAbsolutePath();
+				Desktop.getDesktop().open(file);
 				showInfoAlert();
 //				System.exit(0);
 				} catch(Exception exception) {

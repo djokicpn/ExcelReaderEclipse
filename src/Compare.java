@@ -289,7 +289,6 @@ public class Compare {
 
 		Scene scene = new Scene(bp, 800, 600);
 		stage.setScene(scene);
-		ScenicView.show(stage.getScene());
 		stage.getScene().getStylesheets().add("style.css");
 		stage.show();
 
